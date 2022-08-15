@@ -1,7 +1,21 @@
-import PropTypes from 'prop-types';
 import { Button, ItemLi, PFilter } from './Contact.styled';
+import { deleteUser } from 'redux/contacts/contacts-actions';
+import { useSelector, useDispatch } from 'react-redux';
 
-export const ContactList = ({ contactList, deleteContact }) => {
+export const ContactList = () => {
+  const { items, filter } = useSelector(state => state);
+  const dispatch = useDispatch();
+
+  const handleDelete = id => dispatch(deleteUser(id));
+
+  const getSubmitContacts = (items, filter) => {
+    return items.filter(({ name }) =>
+      name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+
+  const contactList = getSubmitContacts(items, filter);
+
   return (
     <ul>
       {contactList.map(({ id, name, number }) => {
@@ -10,7 +24,7 @@ export const ContactList = ({ contactList, deleteContact }) => {
             <PFilter>
               {name} : {number}{' '}
             </PFilter>
-            <Button type="button" onClick={() => deleteContact(id)}>
+            <Button type="button" onClick={() => handleDelete(id)}>
               Delete
             </Button>
           </ItemLi>
@@ -18,15 +32,4 @@ export const ContactList = ({ contactList, deleteContact }) => {
       })}
     </ul>
   );
-};
-
-ContactList.propTypes = {
-  deleteContact: PropTypes.func.isRequired,
-  contactList: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
 };

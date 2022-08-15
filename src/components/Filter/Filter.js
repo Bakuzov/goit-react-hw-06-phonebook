@@ -1,7 +1,14 @@
-import PropTypes from 'prop-types';
 import { PFilter, Input } from './Filter.styled';
+import { filterUser } from 'redux/contacts/contacts-actions';
+import { useSelector, useDispatch } from 'react-redux';
 
-export const Filter = ({ filter, formSubmitFilter }) => {
+export const Filter = () => {
+  const filter = useSelector(state => state.filter);
+  const dispatch = useDispatch();
+
+  const formSubmitFilter = event =>
+    dispatch(filterUser(event.currentTarget.value));
+
   return (
     <label>
       <PFilter>Find contacts by name</PFilter>
@@ -13,9 +20,4 @@ export const Filter = ({ filter, formSubmitFilter }) => {
       />
     </label>
   );
-};
-
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  formSubmitFilter: PropTypes.func.isRequired,
 };
